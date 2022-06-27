@@ -9,7 +9,8 @@ This little project aim to compare a knowed hash with a file which is fill with 
 ## Usage
 
 After you compile this little program with the Makefile you can execute the programm with the following command : 
-  - `./HashCheck FileToHash KnowHash HashType HashMode`
+  
+    ./HashCheck FileToHash KnowHash HashType HashMode
 
 Different mode are available : 
   - file mode `-f` : hash the file to compare with the knowed hash.
