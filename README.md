@@ -12,11 +12,11 @@ After you compile this little program with the Makefile you can execute the prog
   
     ./HashCheck FileToHash KnowHash HashType HashMode
 
-Different mode are available : 
+Different mode are available (HashMode argument) : 
   - file mode `-f` : hash the file to compare with the knowed hash.
   - line mode `-l` : hash each line of the file to compare with the knowed hash.
 
-This little program allow the users to choose the type of hash : 
+This little program allow the users to choose the type of hash (HashType argument) : 
   - [MD5](https://en.wikipedia.org/wiki/MD5) `-md5`
   - [SHA1](https://en.wikipedia.org/wiki/SHA-1) `-sha1`
   - ...
