@@ -9,8 +9,7 @@
 #include <openssl/md5.h>
 
 /* Création des variables globales */
-int pidF0, pidF1, pidF2; //PIDs des fils utiles
-int tier0, tier1, tier2; //Ligne de début analyse fichier
+int ligne; //Ligne de début analyse fichier
 int nbLigne; //Nombre ligne fichier a analyser
 char* motTrouve; //Mot trouvé
 int ligneTrouve; //Numéro de la ligne ou se situe le mot trouvé
@@ -20,31 +19,45 @@ char* fichierAnalyse; //Buffer nom du fichier à analyser
 char* contenuFichier; //Buffer de lecture ligne à ligne
 struct stat sb;
 unsigned char hashMot[MD5_DIGEST_LENGTH]; //Buffer hash fonction md5
-char hash[2*MD5_DIGEST_LENGTH+1] = ""; //Buffer hash après conversion de uchar en char
-int filsCree; //Booleen fils cree ou non
+char hashConv[2*MD5_DIGEST_LENGTH+1] = ""; //Buffer hash après conversion de uchar en char
 
 /**
- * @brief Afficher le résultat de l'analyse
+ * @brief Display the result of the analysis
  * @param ligne 
  * @param mot 
  */
-void affichageResultat(int ligne, char* mot){
+void affichageResultat(int ligne, char* mot, char* hashTrouve){
     if (ligne == -1){
         printf("Pas de correspondance trouvé dans le fichier");
     }
-    
+    else {
+        printf("\n=== MOT TROUVE ===\n");
+        printf("Hash trouvé : %s\n",hashTrouve);
+        printf("Hash d'analyse : %s\n", hashAnalyse);
+        printf("Mot associé : %s\n", mot);
+        printf("Ligne du mot dans le fichier : %d\n\n", ligne);
+    }  
 }
 
 /**
- * @brief Convertir le hash en string 
- * @param string 
- * @param hash 
+ * @brief Display the manual 
+ * @param prog 
  */
-void ConversionHash(char *motHasher, char *hashConv){
-    /* Conversion unsigned char -> char */
-    for (int i=0; i < MD5_DIGEST_LENGTH; i++) {
-        sprintf(hashConv + 2*i, "%02x", motHasher[i]);
-    }
+void afficherNotice(char* prog){
+    printf("Les arguments entrés sont invalides\n\n");
+    printf("Méthodologie : \n");
+    printf("\tAppel : %s fichierAnalyse hashAnalyse typeHash -f/-l\n", prog);
+    printf("\t-f : hash du fichier\n");
+    printf("\t-l : Hash ligne à ligne du fichier\n");
+}
+
+/**
+ * @brief Detect which hash type is selected 
+ * @param hashType 
+ * @param prog
+ */
+void hashSelect(char* prog, char* hashType){
+    afficherNotice(prog);
 }
 
 // ./verifhash fichier hash typeHash -f/-l
@@ -52,11 +65,7 @@ int main(int argc, char* argv[]){
 
     /* Test du bon appel du script */
     if (argc != 5){
-        printf("Les arguments entrés sont invalides\n\n");
-        printf("Méthodologie : \n");
-        printf("\tAppel : %s fichierAnalyse hashAnalyse typeHash -f/-l\n", argv[0]);
-        printf("\t-f : hash du fichier\n");
-        printf("\t-l : Hash ligne à ligne du fichier\n");
+        afficherNotice(argv[0]);
         exit(0);
     }
 
@@ -68,6 +77,10 @@ int main(int argc, char* argv[]){
     /* Test si calcul hash du fichier */
     if (!strcmp(argv[4], "-f")){
         //Calculer le hash du fichier
+        exit(0);
+    } else if (strcmp(argv[4], "-l")){
+        printf("Mode invalide veuillez suivre la notice : \n");
+        afficherNotice(argv[0]);
         exit(0);
     }
 
@@ -85,65 +98,28 @@ int main(int argc, char* argv[]){
 
     //A faire
     /* Calcul du nombre de ligne du fichier */ 
-    nbLigne = 3;
+    nbLigne = 1434439;
 
-    /* Création de deux fils si nombre de ligne dans le fichier est assez conséquent */
-    if (nbLigne > 300){
-
-        tier0 = 0;
-        tier1 = nbLigne/3;
-        tier2 = 2*nbLigne/3;
-
-        pidF1 = fork(); //Création du premier fils d'analyse
-        /* Test bonne création du fils */
-        if (pidF1 <0){
-            perror("Erreur création fils premier tier");
-            exit(1);
-        } 
-        /* Code du fils */
-        else if (pidF1 == 0){
-            // Analyse premiere ligne
-        }
-
-        pidF2 = fork(); //Création du premier fils d'analyse
-        /* Test bonne création du fils */
-        if (pidF2 <0){
-            perror("Erreur création fils deuxieme tier");
-            exit(1);
-        } 
-        /* Code du fils */
-        else if (pidF2 == 0){
-            // Analyse premiere ligne
-        }
-
-    } 
-    /* Code du pere */ 
-    else { // Le pere gère le fichier complet
-        tier2 = 1; 
-    }
+    ligne = 1;
 
     int finAnalyse = 0;
 
     while (fscanf(fichier, "%[^\n] ", contenuFichier) != EOF && !finAnalyse) {        
 
-        //printf("%s\n", contenuFichier);
+        //printf("Pere : %s\n", contenuFichier);
+        //printf("Ligne %d\n", tier2);
         MD5((const unsigned char *)contenuFichier, strlen(contenuFichier), hashMot);
 
         /* Conversion unsigned char -> char */
-        //ConversionHash(hashMot, hash);        
         for (int i=0; i < MD5_DIGEST_LENGTH; i++) {
-            sprintf(hash + 2*i, "%02x", hashMot[i]);
+            sprintf(hashConv + 2*i, "%02x", hashMot[i]);
         }
 
-        if (!strcmp(hashAnalyse, hash)){
+        if (!strcmp(hashAnalyse, hashConv)){
             finAnalyse = 1;
-            printf("\n=== MOT TROUVE ===\n");
-            printf("Hash trouvé : %s\n",hash);
-            printf("Hash d'analyse : %s\n", hashAnalyse);
-            printf("Mot associé : %s\n", contenuFichier);
-            printf("Ligne du mot dans le fichier : %d\n\n", tier2);
+            affichageResultat(ligne, contenuFichier, hashConv);
         } else {
-            tier2++; //Increment ligne
+            ligne++; //Increment ligne
         }
         
     }  
