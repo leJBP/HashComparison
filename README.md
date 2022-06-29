@@ -6,6 +6,22 @@ This little project is still in development
 
 This little project aim to compare a knowed hash with a file which is fill with word to hash and compare with the knowed hash. 
 
+## Requirements
+
+Before you start using this programm please ensure you have install openssl package : 
+- On linux :       
+
+        sudo apt-get install openssl
+If you have an error like the following when you compile : 
+
+        md5.c:20:25: fatal error: openssl/md5.h: No such file or directory
+         #include <openssl/md5.h>
+                             ^
+        compilation terminated.
+You should install this package : 
+
+        sudo apt-get install libpcap-dev libssl-dev
+
 ## Compilation
 
 To easily compile use the makefile thank to the following command : 
