@@ -1,5 +1,6 @@
 # Hash Comparison
 
+A little program to hash line by line and compare it to the know hash.
 This little project is still in development 
 
 ## Introduction
