@@ -1,5 +1,7 @@
 # Hash Comparison
 
+This little project is still in development 
+
 ## Introduction
 
 This little project aim to compare a knowed hash with a file which is fill with word to hash and compare with the knowed hash. 
