@@ -31,4 +31,4 @@ This little program allow the users to choose the type of hash (HashType argumen
 
 ## Working
 
-This program work in different way depends on the file size and the `HashMode`. If the file have less than 300 line the program don't use the primitive `fork()` to share the task, this value can be change directly in the C code. When the program share tasks two son are created and the work is distributed between the father and both son.
+This program work in different way depends on the `HashMode`. Due to the efficiency of this language i think there is no need to share the work (when the program is in line mode `-l`) with some son `fork()`. Feel free if you want to submit some modification in order to improve this program.
