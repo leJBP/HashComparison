@@ -42,7 +42,7 @@ Different mode are available (HashMode argument) :
 
 This little program allow the users to choose the type of hash (HashType argument) : 
   - [MD5](https://en.wikipedia.org/wiki/MD5) `-md5`
-  - [SHA1](https://en.wikipedia.org/wiki/SHA-1) `-sha1`
+  - [SHA1](https://en.wikipedia.org/wiki/SHA-1) `-sha1` (not implemented yet)
   - ...
 
 ## Working
